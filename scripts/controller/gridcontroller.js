@@ -8,6 +8,7 @@ define(function (require) {
         grid.addNumbersToSquares();
         view.addNumbers(grid);
         view.getClues(grid.lines);
+        document.getElementById("finish").style.display = "none";
     })
     
     //RegisterForPageEvents
@@ -43,6 +44,7 @@ define(function (require) {
             }
 
 
+            document.getElementById("finish").style.display = "block";
             view.makeStage(gridModel.getViewProperties());
 
 

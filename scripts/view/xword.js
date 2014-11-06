@@ -261,7 +261,7 @@ define(function (require) {
             }
             
             document.getElementById(lines[i].horizontal?"clue-entry-across":"clue-entry-down").innerHTML +=
-                ("<div>" + lines[i].num + " answer: " + text + " clue: <input  id='clue-entry-" + lines[i].num + (lines[i].horizontal?"h":"d") + "' type='text' placeholder='enter clue here'></input></div>");
+                ("<div>" + lines[i].num + ". " + text + " <input  id='clue-entry-" + lines[i].num + (lines[i].horizontal?"h":"d") + "' type='text' placeholder='enter clue here'></input></div>");
             
             
         }
@@ -276,12 +276,15 @@ define(function (require) {
         
         for (var i = 0; i < lines.length; i++) {
             if (lines[i].horizontal && lines[i].num) {
-                document.getElementById("across-clues-beneath").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + "</li>");
-                document.getElementById("across-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + "</li>");
+                document.getElementById("across-clues-beneath").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + " ("+ lines[i].squares.length +")" + "</li>");
+                document.getElementById("across-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + " ("+ lines[i].squares.length +")" + "</li>");
             } else if (lines[i].num) {
-                document.getElementById("down-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + "</li>");
+                document.getElementById("down-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + " ("+ lines[i].squares.length +")" + "</li>");
             }
         }
+        document.getElementById("across-clues-beneath").classList.remove("clue");
+        document.getElementById("across-clues").classList.remove("clue");
+        document.getElementById("down-clues").classList.remove("clue");
     }
     
     function hideCluesGetter() {
@@ -366,6 +369,8 @@ define(function (require) {
         showUrl: function (url) {
             document.getElementById("url").innerHTML = '<a href="' + url + '">link to this cross word</a>';
             document.getElementById("url-text").value = url;
+            
+        document.getElementById("url-text").style.display = "block";
         },
         hideCluesGetter: function() {
             hideCluesGetter();

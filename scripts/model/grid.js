@@ -152,10 +152,10 @@ define(function (require) {
         for (var i = leftMostSquare.coordX; i <= rightMostSquare.coordX; i++) {
             for (var j = topMostSquare.coordY; j <= bottomMostSquare.coordY; j++) {
                 if (grid.squares[i][j].addedToCrossword) {
-                    if (!grid.squares[i - 1][j].addedToCrossword && grid.squares[i + 1][j].addedToCrossword) {
+                    if ((!grid.squares[i - 1][j] || !grid.squares[i - 1][j].addedToCrossword) && grid.squares[i + 1][j].addedToCrossword) {
                         checkLineAddedToCrosswordAndAdd(grid.squares[i][j], grid.squares[i + 1][j]);
                     }
-                    if (!grid.squares[i][j - 1].addedToCrossword && grid.squares[i][j + 1].addedToCrossword) {
+                    if ((!grid.squares[i][j - 1] ||!grid.squares[i][j - 1].addedToCrossword) && grid.squares[i][j + 1].addedToCrossword) {
                         checkLineAddedToCrosswordAndAdd(grid.squares[i][j], grid.squares[i][j + 1])
                     }
                 }

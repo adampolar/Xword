@@ -132,12 +132,20 @@ table {
 
 body {
     background-color: #EEEEEE;
+    font-family: bree serif, arial!important;
 }
 #title-bar {
     width: 100%;
     background-color: black;
     background-repeat: no-repeat;
     padding: 10px;
+    color: #CCCCCC;
+}
+#title-bar a {
+    color: #CCCCCC;
+}
+#title-bar a:hover {
+    color: #EEEEEE;
 }
 #title-bar img {
     height: 150px;
@@ -147,6 +155,7 @@ body {
     margin-right: auto;
     display: table;
     padding: 20px;
+    font-family: bree serif, arial!important;
 }
 #generate {
     display: block;
@@ -160,20 +169,69 @@ body {
 #across-clues,
 #across-clues-beneath,
 #down-clues {
-    width: 500px;
+    border-top: 3px solid #CCCCCC;
+    background-color: #ffffff;
+    width: 44%;
+    padding: 1%;
+    margin: 2%;
+}
+.clue {
+    display: none !important;
 }
 #across-clues-beneath {
+    display: none;
+}
+#finish {
+    display: none;
+}
+#finish,
+#generate {
+    margin: 0 auto;
+    background-color: #CCCCCC;
+    border: none;
+    width: 300px;
+    font-size: 30px;
+    font-family: Bree serif;
+}
+#url-text {
     display: none;
 }
 #clue-entry {
     display: none;
 }
+.modal + #dim-background {
+    position: fixed;
+    top: 0%;
+    left: 0%;
+    height: 100%;
+    width: 100%;
+    background-color: #000000;
+    opacity: 0.6;
+    z-index: 50;
+}
 #clue-entry.modal {
+    z-index: 100;
+    padding: 10px;
     display: block;
-    position:fixed;
-    top:50%;
-    left:50%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     background-color: #EEEEEE;
+}
+#clue-entry-across,
+#clue-entry-down {
+    display: inline-block;
+    width: 500px;
+}
+#clue-entry-across div,
+#clue-entry-down div {
+    margin: 10px 0;
+}
+#clue-entry-across input,
+#clue-entry-down input {
+    float: right;
 }
 @media(max-width:1750px){
 
@@ -185,5 +243,10 @@ body {
 }
 #xword2 {
     display: block;
+    padding: 10px;
+}
+.kineticjs-content {
+    display: block!important;
+    margin: 0 auto;
 }
 }

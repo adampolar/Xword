@@ -3,36 +3,41 @@
 <head>
     <link rel="stylesheet" href="css/xword.css" />
     <script data-main="scripts/main" src="http://requirejs.org/docs/release/2.1.15/minified/require.js"></script>
+    <link href="http://fonts.googleapis.com/css?family=Bree+Serif" rel="stylesheet" type="text/css">
 </head>
 
 <body>
     <div id="title-bar">
         <img src="pictures/download.png"></img>
+        made by <a href="http://www.adam-slater.com">Adam Slater</a>.
+        Click <a href="http://www.adam-slater.com/Xword/">here</a> to generate your own crossword. 
     </div>
     <div id="main">
-        <div id="across-clues">
+        
+        <button name="finish" id="finish">Finish</button>
+        <div id="url"></div>
+        <input type="text" id="url-text"></textarea>
+        <div id="across-clues"  class="clue">
             <h3>Across</h3>
             <ol></ol>
         </div>
         <div id="xword2">
         </div>
-        <div id="across-clues-beneath">
+        <div id="across-clues-beneath" class="clue">
             <h3>Across</h3>
             <ol></ol>
         </div>
-        <div id="down-clues">
+        <div id="down-clues"  class="clue">
             <h3>Down</h3>
             <ol></ol>
         </div>
-        <button name="finish" id="finish">Finish</button>
-        <div id="url"></div>
-        <textarea id="url-text"></textarea>
         <div id="clue-entry">
-            Enter Clues
+            <div id="enter-clues">Enter Clues</div>
             <div id="clue-entry-across">Across:</div>
             <div id="clue-entry-down">Down:</div>
             <button name="generate" id="generate">Generate</button>
         </div>
+    <div id="dim-background"></div>
 </body>
 
 </html>
