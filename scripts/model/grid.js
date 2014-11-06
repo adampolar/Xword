@@ -74,7 +74,8 @@ define(function (require) {
 
         grid.lines[grid.lines.length] = {
             squares: squares,
-            clue: clue
+            clue: clue,
+            horizontal: startSquare.coordX === endSquare.coordX
         }
     }
 
@@ -87,7 +88,7 @@ define(function (require) {
             var finished = false;
             var previousSquare = grid.squares[line.horizontal ? line.squares[0].coordX - 1 : line.squares[0].coordX][line.horizontal ? line.squares[0].coordY : line.squares[0].coordY - 1];
             while (!finished) {
-                if (previousSquare.addedToCrossword) {
+                if (previousSquare && previousSquare.addedToCrossword) {
                     line.squares.unshift(previousSquare);
                 } else {
                     break;
@@ -97,7 +98,7 @@ define(function (require) {
             finished = false;
             var nextSquare = grid.squares[line.horizontal ? line.squares[0].coordX + 1 : line.squares[0].coordX][line.horizontal ? line.squares[0].coordY : line.squares[0].coordY + 1];
             while (!finished) {
-                if (previousSquare.addedToCrossword) {
+                if (previousSquare && previousSquare.addedToCrossword) {
                     line.squares.push(nextSquare);
                 } else {
                     break;
@@ -107,7 +108,8 @@ define(function (require) {
         }
 
 
-        console.log(grid);
+
+        checkForExtraLines();
 
     }
 
@@ -126,6 +128,42 @@ define(function (require) {
         }
     }
 
+    function checkLineAddedToCrosswordAndAdd(square1, square2) {
+        for (var i = 0; i < grid.lines.length; i++) {
+            if ((grid.lines[i].squares[0] === square1) && (grid.lines[i].squares[1] === square2)) {
+                return
+            }
+        }
+        var squares = [];
+        var square = square1;
+        var horizontal = (square1.coordX === square2.coordX);
+        while (grid.squares[horizontal ? square.coordX + 1 : square.coordX][horizontal ? square.coordY : square.coordY + 1].addedToCrossword) {
+            square = grid.squares[horizontal ? square.coordX + 1 : square.coordX][horizontal ? square.coordY : square.coordY + 1];
+        }
+        addLine(square1, square, "a");
+        return false;
+    }
+
+    function checkForExtraLines() {
+        var leftMostSquare = getLeftmostSquare();
+        var rightMostSquare = getRightmostSquare();
+        var topMostSquare = getTopmostSquare();
+        var bottomMostSquare = getBottomostSquare();
+        for (var i = leftMostSquare.coordX; i <= rightMostSquare.coordX; i++) {
+            for (var j = topMostSquare.coordY; j <= bottomMostSquare.coordY; j++) {
+                if (grid.squares[i][j].addedToCrossword) {
+                    if (!grid.squares[i - 1][j].addedToCrossword && grid.squares[i + 1][j].addedToCrossword) {
+                        checkLineAddedToCrosswordAndAdd(grid.squares[i][j], grid.squares[i + 1][j]);
+                    }
+                    if (!grid.squares[i][j - 1].addedToCrossword && grid.squares[i][j + 1].addedToCrossword) {
+                        checkLineAddedToCrosswordAndAdd(grid.squares[i][j], grid.squares[i][j + 1])
+                    }
+                }
+            }
+        }
+    }
+
+
     function addNumbersToSquares() {
         amend(grid.lines);
         grid.lines.sort(lineSorter);
@@ -143,8 +181,7 @@ define(function (require) {
 
     }
 
-
-    function copyLine(line) {
+    function copyLineAndAdjust(line, leftmostSquare, topmostSquare) {
         var newline = {
             clue: line.clue,
             horizontal: line.horizontal,
@@ -154,10 +191,10 @@ define(function (require) {
 
         for (var i = 0; i < line.squares.length; i++) {
             newline.squares[i] = {
-                offsetX: line.squares[i].offsetX,
-                offsetY: line.squares[i].offsetY,
-                coordX: line.squares[i].coordX,
-                coordY: line.squares[i].coordY,
+                offsetX: line.squares[i].offsetX - leftmostSquare.offsetX,
+                offsetY: line.squares[i].offsetY - topmostSquare.offsetY,
+                coordX: line.squares[i].coordX - leftmostSquare.coordX,
+                coordY: line.squares[i].coordY - topmostSquare.coordY,
                 num: line.squares[i].num
             }
         }
@@ -166,6 +203,70 @@ define(function (require) {
         return newline;
     }
 
+    function getLeftmostSquare() {
+        var squareForComparison = grid.lines[0].squares[0];
+        for (var i = 1; i < grid.lines.length; i++) {
+            if (grid.lines[i].squares[0].coordX < squareForComparison.coordX) {
+                squareForComparison = grid.lines[i].squares[0];
+            }
+        }
+        return squareForComparison;
+    }
+
+    function getRightmostSquare() {
+        var squareForComparison = grid.lines[0].squares[grid.lines[0].squares.length - 1];
+        for (var i = 1; i < grid.lines.length; i++) {
+            if (grid.lines[i].squares[grid.lines[i].squares.length - 1].coordX > squareForComparison.coordX) {
+                squareForComparison = grid.lines[i].squares[grid.lines[i].squares.length - 1];
+            }
+        }
+        return squareForComparison;
+    }
+
+
+    function getTopmostSquare() {
+        var squareForComparison = grid.lines[0].squares[0];
+        for (var i = 1; i < grid.lines.length; i++) {
+            if (grid.lines[i].squares[0].coordY < squareForComparison.coordY) {
+                squareForComparison = grid.lines[i].squares[0];
+            }
+        }
+        return squareForComparison;
+    }
+
+    function getBottomostSquare() {
+        var squareForComparison = grid.lines[0].squares[grid.lines[0].squares.length - 1];
+        for (var i = 1; i < grid.lines.length; i++) {
+            if (grid.lines[i].squares[grid.lines[i].squares.length - 1].coordY > squareForComparison.coordY) {
+                squareForComparison = grid.lines[i].squares[grid.lines[i].squares.length - 1];
+            }
+        }
+        return squareForComparison;
+    }
+
+    function correctCrossoverPoints(obj) {
+        var tempGrid = [];
+        for (var i = 0; i < obj.lines.length; i++) {
+            for (var j = 0; j < obj.lines[i].squares.length; j++) {
+                var square = obj.lines[i].squares[j];
+                if (tempGrid[square.coordX] && tempGrid[square.coordX][square.coordY]) {
+                    obj.lines[i].squares[j] = tempGrid[square.coordX][square.coordY];
+                } else if (tempGrid[square.coordX]) {
+                    tempGrid[square.coordX][square.coordY] = obj.lines[i].squares[j];
+                } else {
+                    tempGrid[square.coordX] = [];
+                    tempGrid[square.coordX][square.coordY] = obj.lines[i].squares[j];
+                }
+            }
+        }
+
+    }
+
+    function saveClues() {
+        for (var i = 0; i < grid.lines.length; i++) {
+            grid.lines[i].clue = document.getElementById("clue-entry-" + grid.lines[i].num + (grid.lines[i].horizontal ? "h" : "d")).value;
+        }
+    }
 
     return {
         getViewProperties: function () {
@@ -183,10 +284,17 @@ define(function (require) {
         generateUrl: function () {
             var newJsonObject = {};
             newJsonObject.lines = [];
+            var leftMostSquare = getLeftmostSquare();
+            var rightMostSquare = getRightmostSquare();
+            var TopMostSquare = getTopmostSquare();
+            var BottomostMostSquare = getBottomostSquare();
+
 
             for (var i = 0; i < grid.lines.length; i++) {
-                newJsonObject.lines[i] = copyLine(grid.lines[i]);
+                newJsonObject.lines[i] = copyLineAndAdjust(grid.lines[i], leftMostSquare, TopMostSquare);
             }
+            newJsonObject.stageWidth = rightMostSquare.offsetX + viewProperties.BUMPER_SIZE + viewProperties.SQUARE_SIZE - leftMostSquare.offsetX;
+            newJsonObject.stageHeight = BottomostMostSquare.offsetY + viewProperties.BUMPER_SIZE + viewProperties.SQUARE_SIZE - TopMostSquare.offsetY;
             var compresseduri = LZString.compressToBase64(JSON.stringify(newJsonObject))
 
             return document.URL + '?xword=' + encodeURIComponent(compresseduri);
@@ -194,8 +302,13 @@ define(function (require) {
 
         },
         getObjectFromUrl: function () {
-            return JSON.parse(LZString.decompressFromBase64(decodeURIComponent(document.URL.split("?xword=")[1])));
+            var object = JSON.parse(LZString.decompressFromBase64(decodeURIComponent(document.URL.split("?xword=")[1])));
+            correctCrossoverPoints(object);
+            return object;
 
+        },
+        saveClues: function () {
+            saveClues();
         }
     }
 })

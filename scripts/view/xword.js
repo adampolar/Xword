@@ -216,9 +216,6 @@ define(function (require) {
                 } else {
                     crosswordLayer.draw();
                     enterTextMode = false;
-                    if (gridLayer) {
-                        enterTextLine.clue = prompt("clue", "enter clue here");
-                    }
                 }
 
             }
@@ -255,18 +252,40 @@ define(function (require) {
             }
         }
     }
+    
+    function getClues(lines) {
+        for (var i = 0; i < lines.length; i++) {
+            var text = "";
+            for (var j = 0; j < lines[i].squares.length; j++) {
+                text += lines[i].squares[j].textView.text();
+            }
+            
+            document.getElementById(lines[i].horizontal?"clue-entry-across":"clue-entry-down").innerHTML +=
+                ("<div>" + lines[i].num + " answer: " + text + " clue: <input  id='clue-entry-" + lines[i].num + (lines[i].horizontal?"h":"d") + "' type='text' placeholder='enter clue here'></input></div>");
+            
+            
+        }
+        document.getElementById("clue-entry").classList.add("modal");
+
+    }
 
     function addClues(lines) {
         var acrossClueCount = 0;
         var downClueCount = 0;
+
+        
         for (var i = 0; i < lines.length; i++) {
             if (lines[i].horizontal && lines[i].num) {
-                document.getElementById("across-clues-beneath").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].clue + "</li>");
-                document.getElementById("across-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].clue + "</li>");
+                document.getElementById("across-clues-beneath").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + "</li>");
+                document.getElementById("across-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + "</li>");
             } else if (lines[i].num) {
-                document.getElementById("down-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].clue + "</li>");
+                document.getElementById("down-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + "</li>");
             }
         }
+    }
+    
+    function hideCluesGetter() {
+        document.getElementById("clue-entry").classList.remove("modal");
     }
 
 
@@ -341,10 +360,15 @@ define(function (require) {
         addClues: function (lines) {
             addClues(lines);
         },
+        getClues: function (lines) {
+            getClues(lines);
+        },
         showUrl: function (url) {
-
-
-            document.getElementById("url").innerHTML = '<a href="' + url + '">' + url + '</a>';
+            document.getElementById("url").innerHTML = '<a href="' + url + '">link to this cross word</a>';
+            document.getElementById("url-text").value = url;
+        },
+        hideCluesGetter: function() {
+            hideCluesGetter();
         }
     }
 })

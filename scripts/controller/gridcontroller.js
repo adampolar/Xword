@@ -3,16 +3,22 @@ define(function (require) {
     var view = require("../view/xword");
     var grid;
 
+    document.getElementById("finish").addEventListener("click", function() {
+        view.getRidOfGrid();
+        grid.addNumbersToSquares();
+        view.addNumbers(grid);
+        view.getClues(grid.lines);
+    })
+    
     //RegisterForPageEvents
     document.getElementById("generate").addEventListener("click", function (e) {
+        view.hideCluesGetter();
+        gridModel.saveClues();
         generateCrossword();
     });
 
 
     function generateCrossword() {
-        view.getRidOfGrid();
-        grid.addNumbersToSquares();
-        view.addNumbers(grid);
         view.addClues(grid.lines);
         view.showUrl(gridModel.generateUrl());
     }
@@ -25,16 +31,19 @@ define(function (require) {
 
         start: function () {
 
-            view.makeStage(gridModel.getViewProperties());
 
             if (document.URL.split("?xword=")[1]) {
                 var xword = gridModel.getObjectFromUrl(Document.URL);
                 xword.viewProperties = gridModel.getViewProperties();
+                xword.viewProperties.HEIGHT = xword.stageHeight;
+                xword.viewProperties.WIDTH = xword.stageWidth;
+                view.makeStage(gridModel.getViewProperties());
                 view.drawEmptyCrossword(xword);
                 return;
             }
 
 
+            view.makeStage(gridModel.getViewProperties());
 
 
             grid = gridModel.get();
