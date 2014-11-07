@@ -181,7 +181,7 @@ define(function (require) {
 
     }
 
-    function copyLineAndAdjust(line, leftmostSquare, topmostSquare) {
+    function copyLineAndAdjust(line, leftmostSquare, topmostSquare, withLetters) {
         var newline = {
             clue: line.clue,
             horizontal: line.horizontal,
@@ -195,7 +195,8 @@ define(function (require) {
                 offsetY: line.squares[i].offsetY - topmostSquare.offsetY,
                 coordX: line.squares[i].coordX - leftmostSquare.coordX,
                 coordY: line.squares[i].coordY - topmostSquare.coordY,
-                num: line.squares[i].num
+                num: line.squares[i].num,
+                letter: withLetters? line.squares[i].letter:""
             }
         }
 
@@ -281,7 +282,7 @@ define(function (require) {
             };
             return grid;
         },
-        generateUrl: function () {
+        generateUrl: function (withLetters) {
             var newJsonObject = {};
             newJsonObject.lines = [];
             var leftMostSquare = getLeftmostSquare();
@@ -291,19 +292,21 @@ define(function (require) {
 
 
             for (var i = 0; i < grid.lines.length; i++) {
-                newJsonObject.lines[i] = copyLineAndAdjust(grid.lines[i], leftMostSquare, TopMostSquare);
+                newJsonObject.lines[i] = copyLineAndAdjust(grid.lines[i], leftMostSquare, TopMostSquare, withLetters);
             }
             newJsonObject.stageWidth = rightMostSquare.offsetX + viewProperties.BUMPER_SIZE + viewProperties.SQUARE_SIZE - leftMostSquare.offsetX;
             newJsonObject.stageHeight = BottomostMostSquare.offsetY + viewProperties.BUMPER_SIZE + viewProperties.SQUARE_SIZE - TopMostSquare.offsetY;
             var compresseduri = LZString.compressToBase64(JSON.stringify(newJsonObject))
 
-            return document.URL + '?xword=' + encodeURIComponent(compresseduri);
+            return document.URL.split('?xword=')[0] + '?xword=' + encodeURIComponent(compresseduri);
 
 
         },
         getObjectFromUrl: function () {
+            
             var object = JSON.parse(LZString.decompressFromBase64(decodeURIComponent(document.URL.split("?xword=")[1])));
             correctCrossoverPoints(object);
+            grid = object;
             return object;
 
         },

@@ -17,6 +17,10 @@ define(function (require) {
         gridModel.saveClues();
         generateCrossword();
     });
+    
+    document.getElementById("save-for-later").addEventListener("click", function(e) {
+        document.location.href = "mailto:?body="+ gridModel.generateUrl(true) +"&subject= My saved crossword";
+    });
 
 
     function generateCrossword() {
@@ -39,6 +43,8 @@ define(function (require) {
                 xword.viewProperties.HEIGHT = xword.stageHeight;
                 xword.viewProperties.WIDTH = xword.stageWidth;
                 view.makeStage(gridModel.getViewProperties());
+                grid= xword;
+                document.getElementById("save-for-later").style.display = "block";
                 view.drawEmptyCrossword(xword);
                 return;
             }

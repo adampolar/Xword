@@ -35,12 +35,13 @@ define(function (require) {
                     y: square.offsetY,
                     fontSize: 30,
                     fill: viewProperties.SELECTED_COLOUR,
-                    fontFamily: 'Arial',
+                    fontFamily: 'Bree Serif',
                     width: sq.getWidth(),
                     align: 'center',
                     sq: sq,
                     square: square,
-                    line: line
+                    line: line,
+                    Text: square.letter? square.letter:""
                 });
                 if (!shouldEnterTextMode) {
                     //attach event to fill in clue
@@ -202,6 +203,7 @@ define(function (require) {
             var charCode = (typeof e.which == "number") ? e.which : e.keyCode;
             if (charCode) {
                 square.textView.text(String.fromCharCode((charCode)));
+                square.letter =  String.fromCharCode((charCode));
                 square.crosswordLevelDrawing.fill("white");
                 if (!textEntrySquare) {
                     square = getFirstSquareWithoutText(enterTextLine);
@@ -220,6 +222,7 @@ define(function (require) {
 
             }
         }
+        
     });
 
     function makeBigBlackSquare(opacity) {

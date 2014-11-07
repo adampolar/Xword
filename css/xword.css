@@ -181,11 +181,12 @@ body {
 #across-clues-beneath {
     display: none;
 }
-#finish {
+#finish,
+#save-for-later {
     display: none;
 }
 #finish,
-#generate {
+#generate, #save-for-later {
     margin: 0 auto;
     background-color: #CCCCCC;
     border: none;
