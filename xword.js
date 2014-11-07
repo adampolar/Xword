@@ -1,7 +1,7 @@
 define(function (require) {
 
 
-    var gridcontroller = require("controller/gridcontroller");
+    var gridcontroller = require("controller/gridcontroller.min");
 
 
     return {
