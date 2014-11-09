@@ -160,13 +160,11 @@ body {
 #generate {
     display: block;
 }
-#across-clues,
 #xword2,
 #down-clues {
     display: inline-block;
     vertical-align: top;
 }
-#across-clues,
 #across-clues-beneath,
 #down-clues {
     border-top: 3px solid #CCCCCC;
@@ -177,9 +175,6 @@ body {
 }
 .clue {
     display: none !important;
-}
-#across-clues-beneath {
-    display: none;
 }
 #finish,
 #save-for-later {
@@ -234,11 +229,6 @@ body {
 #clue-entry-down input {
     float: right;
 }
-@media(max-width:1750px){
-
-#across-clues {
-    display: none;
-}
 #across-clues-beneath {
     display: inline-block;
 }
@@ -249,5 +239,4 @@ body {
 .kineticjs-content {
     display: block!important;
     margin: 0 auto;
-}
 }

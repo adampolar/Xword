@@ -280,13 +280,11 @@ define(function (require) {
         for (var i = 0; i < lines.length; i++) {
             if (lines[i].horizontal && lines[i].num) {
                 document.getElementById("across-clues-beneath").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + " ("+ lines[i].squares.length +")" + "</li>");
-                document.getElementById("across-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + " ("+ lines[i].squares.length +")" + "</li>");
             } else if (lines[i].num) {
                 document.getElementById("down-clues").getElementsByTagName("ol")[0].innerHTML += ("<li>" + lines[i].num + ". " + lines[i].clue + " ("+ lines[i].squares.length +")" + "</li>");
             }
         }
         document.getElementById("across-clues-beneath").classList.remove("clue");
-        document.getElementById("across-clues").classList.remove("clue");
         document.getElementById("down-clues").classList.remove("clue");
     }
     
