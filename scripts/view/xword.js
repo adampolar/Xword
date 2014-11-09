@@ -46,7 +46,11 @@ define(function (require) {
                 if (!shouldEnterTextMode) {
                     //attach event to fill in clue
                     if (true) {
-                        simpleText.on("mousedown", function (e) {
+                        simpleText.on("mousedown, tap", function (e) {
+                            if(e.type == "tap") {
+                                getKeyboardUp();
+                            }
+                            
                             if (enterTextLine) {
                                 unfocus(enterTextLine);
                             }
@@ -75,6 +79,20 @@ define(function (require) {
             }
 
         }
+    }
+    
+    function geyKeyboardUp() {
+        //hack to get keyboard up for mobiles
+        var input = document.createElement("input");
+        input.type = "text";
+        input.style="display:none";
+        input.id = "input-for-mobile";
+        document.getElementById("xword2").appendChild(input);
+        input = document.getElementById("input-for-mobile");
+        if (typeof input.onclick == "function") {
+            input.onclick.apply(input);
+        }
+        
     }
 
     function unfocus(line) {
@@ -122,7 +140,7 @@ define(function (require) {
 
         square.drawing = sq;
 
-        sq.on('mouseover', function () {
+        sq.on('mouseover touchenter', function () {
             if (enterTextMode) return;
             if (mousedown) {
                 clearAllSquares(grid, viewProperties);
@@ -154,7 +172,7 @@ define(function (require) {
             this.fill(viewProperties.FILL_COLOUR_HOVER);
             gridLayer.draw();
         });
-        sq.on('mouseout', function () {
+        sq.on('mouseout touchleave', function () {
             if (enterTextMode) return;
             this.stroke(viewProperties.LINE_COLOUR);
             this.strokeWidth(viewProperties.LINE_WIDTH);
@@ -162,17 +180,14 @@ define(function (require) {
             gridLayer.draw();
         });
 
-        sq.on('mousedown', function () {
+        sq.on('mousedown touchstart', function () {
             if (enterTextMode) return;
             mousedown = true;
             mousedownSquare = square;
-            this.stroke(viewProperties.LINE_COLOUR_HOVER);
-            this.strokeWidth(viewProperties.LINE_WIDTH_HOVER);
-            this.fill(viewProperties.FILL_COLOUR_HOVER);
             gridLayer.draw();
         });
 
-        sq.on('mouseup', function () {
+        sq.on('mouseup touchend', function () {
             if (enterTextMode) return;
             mousedown = false;
             mouseupsquare = square;
